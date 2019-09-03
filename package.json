@@ -1,0 +1,47 @@
+{
+  "name": "path-optimizer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "babel-node": "babel-node",
+    "build": "babel src -d dist",
+    "install-deps": "./scripts/install-deps",
+    "itest": "yarn newman run test/integrationTests/routeOptimizer.postman_collection.json",
+    "lint": "yarn eslint '**/*.js'",
+    "serve": "node dist/server.js",
+    "slate": "rm -rf node_modules && yarn",
+    "start": "nodemon --exec babel-node -- src/server.js",
+    "test": "nyc mocha --require @babel/register 'test/unitTests/**/*.test.js'"
+  },
+  "keywords": [
+    "TSP",
+    "path optimization",
+    "schedule"
+  ],
+  "author": "Louis VINCHON",
+  "license": "ISC",
+  "dependencies": {
+    "@google/maps": "^0.5.5",
+    "ajv": "^6.10.2",
+    "express": "^4.17.1",
+    "moment": "^2.24.0",
+    "node-tspsolver": "^1.0.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "babel-plugin-mockable-imports": "^1.5.1",
+    "chai": "^4.2.0",
+    "eslint": "^6.3.0",
+    "mocha": "^6.2.0",
+    "newman": "^4.5.4",
+    "node-gyp": "^5.0.3",
+    "nodemon": "^1.19.1",
+    "nyc": "^14.1.1",
+    "sinon": "^7.4.1"
+  }
+}

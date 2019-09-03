@@ -1,0 +1,15 @@
+{
+  "presets": [
+  	[
+  		"@babel/preset-env",
+  		{
+  			"exclude": ["transform-regenerator"]
+  		}
+  	]
+  ],
+  "env": {
+    "development": {
+      "plugins": ["mockable-imports"]
+    }
+  }
+}

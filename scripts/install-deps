@@ -1,0 +1,8 @@
+#! /bin/bash -e
+
+yarn slate
+
+# Compile node-tspsolver which is a C++ library.
+cd node_modules/node-tspsolver
+yarn node-gyp configure
+yarn node-gyp build

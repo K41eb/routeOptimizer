@@ -1,0 +1,61 @@
+{
+  "$id": "https://example.com/route-optimizer-request.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "route optimization query",
+  "type": "object",
+  "required": [
+    "departureTime",
+    "tasks",
+    "home"
+  ],
+  "properties": {
+    "departureTime": {
+      "type": "string"
+    },
+    "home": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/coordinates"
+        }
+      ]
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/task"
+      }
+    }
+  },
+  "definitions": {
+    "coordinates": {
+      "type": "object",
+      "required": ["lat", "lng"],
+      "properties": {
+        "lat": {
+          "type": "number"
+        },
+        "lng": {
+          "type": "number"
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/coordinates"
+        }
+      ],
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

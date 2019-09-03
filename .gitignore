@@ -1,0 +1,12 @@
+# Packages informations are kept in the package.json file, there's 
+# no need to version control the whole packages.
+node_modules
+
+# Compiled js files.
+dist
+
+# yarn log files
+yarn-error.log
+
+# Istambul output (and it's cli nyc)
+.nyc_output

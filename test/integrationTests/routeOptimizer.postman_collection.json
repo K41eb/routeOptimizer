@@ -1,0 +1,438 @@
+{
+	"info": {
+		"_postman_id": "69fbdbe9-27b3-4764-9a49-47f84813be94",
+		"name": "routeOptimizer",
+		"description": "Short collection of requests to test the routeOptimizer server.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Missing properties",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "19140103-6467-4e85-8ea4-5aa193bc4209",
+						"exec": [
+							"const UNIXTomorrow = new Date().setDate(new Date().getDate() + 1);",
+							"const UNIXTimestamp = Math.round(UNIXTomorrow / 1000);",
+							"",
+							"pm.environment.set(\"departureTime\", UNIXTimestamp);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "54c8e470-c3f9-4aae-a098-19400dbef1e7",
+						"exec": [
+							"pm.test(\"Response is 400 Bad request\", function () {",
+							"    pm.expect(pm.response.code).to.equal(400);",
+							"    pm.expect(pm.response.status).to.equal('Bad Request');",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Response has original error messages\", function () {",
+							"    pm.expect(jsonData.error.message).to.equal(\"Schema validation failed, please check your request.\");",
+							"    pm.expect(jsonData.error.type).to.equal(\"ValidationError\");",
+							"    pm.expect(jsonData.error.defaultMessage).to.equal(\"Invalid input.\");",
+							"    pm.expect(jsonData.error.status).to.equal(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"departureTime\": \"{{departureTime}}\",\n  \"home\": {\n    \"lng\": 2.333563799999979\n  },\n  \"tasks\":[\n    {\n       \"id\":1,\n       \"lat\":48.8623348,\n       \"lng\":2.3447356000000354\n    },\n    {\n      \"id\":2,\n      \"lat\":48.879251,\n      \"lng\":2.282264899999973,\n      \"duration\": 60\n    },\n    {\n      \"id\": 3,\n      \"lat\": 48.7251521,\n      \"lng\": 2.259899799999971,\n      \"duration\": 30\n    },\n    {\n      \"id\": 4,\n      \"lat\": 48.83477,\n      \"lng\": 2.370769999999993,\n      \"duration\": 90\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/routeOptimizer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"routeOptimizer"
+					]
+				},
+				"description": "Request with a latitude coordinate as string instead of integer. We expect the server to respond with an error."
+			},
+			"response": [
+				{
+					"name": "Missing properties response example",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"departureTime\": \"{{departureTime}}\",\n  \"home\": {\n    \"lng\": 2.333563799999979\n  },\n  \"tasks\":[\n    {\n       \"id\":1,\n       \"lat\":48.8623348,\n       \"lng\":2.3447356000000354\n    },\n    {\n      \"id\":2,\n      \"lat\":48.879251,\n      \"lng\":2.282264899999973,\n      \"duration\": 60\n    },\n    {\n      \"id\": 3,\n      \"lat\": 48.7251521,\n      \"lng\": 2.259899799999971,\n      \"duration\": 30\n    },\n    {\n      \"id\": 4,\n      \"lat\": 48.83477,\n      \"lng\": 2.370769999999993,\n      \"duration\": 90\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/routeOptimizer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"routeOptimizer"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "462"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"1ce-6Td9UFfdg8NVL21JaKbecabOWsY\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Sep 2019 17:09:17 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": {\n        \"message\": \"Schema validation failed, please check your request.\",\n        \"detail\": [\n            {\n                \"keyword\": \"required\",\n                \"dataPath\": \".home\",\n                \"schemaPath\": \"#/definitions/coordinates/required\",\n                \"params\": {\n                    \"missingProperty\": \"lat\"\n                },\n                \"message\": \"should have required property 'lat'\"\n            }\n        ],\n        \"type\": \"ValidationError\",\n        \"defaultMessage\": \"Invalid input.\",\n        \"status\": 400\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Invalid departureTime",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "19140103-6467-4e85-8ea4-5aa193bc4209",
+						"exec": [
+							"const UNIXYesterday = new Date().setDate(new Date().getDate() - 1);",
+							"const UNIXTimestamp = Math.round(UNIXYesterday / 1000);",
+							"",
+							"pm.environment.set(\"departureTime\", UNIXTimestamp);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "54c8e470-c3f9-4aae-a098-19400dbef1e7",
+						"exec": [
+							"pm.test(\"Response is 400 Bad request\", function () {",
+							"    pm.expect(pm.response.code).to.equal(400);",
+							"    pm.expect(pm.response.status).to.equal('Bad Request');",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Response has original error messages\", function () {",
+							"    pm.expect(jsonData.error.message).to.equal(\"Property 'departureTime' is in the past, I can't schedule your past.\");",
+							"    pm.expect(jsonData.error.type).to.equal(\"ValidationError\");",
+							"    pm.expect(jsonData.error.defaultMessage).to.equal(\"Invalid input.\");",
+							"    pm.expect(jsonData.error.status).to.equal(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"departureTime\": \"{{departureTime}}\",\n  \"home\": {\n    \"lat\": 48.83310530000001,\n    \"lng\": 2.333563799999979\n  },\n  \"tasks\":[\n    {\n       \"id\":1,\n       \"lat\":48.8623348,\n       \"lng\":2.3447356000000354,\n       \"duration\":45\n    },\n    {\n      \"id\":2,\n      \"lat\":48.879251,\n      \"lng\":2.282264899999973,\n      \"duration\": 60\n    },\n    {\n      \"id\": 3,\n      \"lat\": 48.7251521,\n      \"lng\": 2.259899799999971,\n      \"duration\": 30\n    },\n    {\n      \"id\": 4,\n      \"lat\": 48.83477,\n      \"lng\": 2.370769999999993,\n      \"duration\": 90\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/routeOptimizer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"routeOptimizer"
+					]
+				},
+				"description": "Request with a departureTime in the past. We expect the server to respond with an error."
+			},
+			"response": [
+				{
+					"name": "Invalid departureTime response example",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"departureTime\": \"{{departureTime}}\",\n  \"home\": {\n    \"lat\": 48.83310530000001,\n    \"lng\": 2.333563799999979\n  },\n  \"tasks\":[\n    {\n       \"id\":1,\n       \"lat\":48.8623348,\n       \"lng\":2.3447356000000354,\n       \"duration\":45\n    },\n    {\n      \"id\":2,\n      \"lat\":48.879251,\n      \"lng\":2.282264899999973,\n      \"duration\": 60\n    },\n    {\n      \"id\": 3,\n      \"lat\": 48.7251521,\n      \"lng\": 2.259899799999971,\n      \"duration\": 30\n    },\n    {\n      \"id\": 4,\n      \"lat\": 48.83477,\n      \"lng\": 2.370769999999993,\n      \"duration\": 90\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/routeOptimizer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"routeOptimizer"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "196"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"c4-Yl7y8FsyH2/Xhk5Vs0sF+frVL2Q\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Sep 2019 17:08:51 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error\": {\n        \"message\": \"Property 'departureTime' is in the past, I can't schedule your past.\",\n        \"type\": \"ValidationError\",\n        \"defaultMessage\": \"Invalid input.\",\n        \"status\": 400\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Valid",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "19140103-6467-4e85-8ea4-5aa193bc4209",
+						"exec": [
+							"const UNIXTomorrow = new Date().setDate(new Date().getDate() + 1);",
+							"const UNIXTimestamp = Math.round(UNIXTomorrow / 1000);",
+							"",
+							"pm.environment.set(\"departureTime\", UNIXTimestamp);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "54c8e470-c3f9-4aae-a098-19400dbef1e7",
+						"exec": [
+							"var chai = require('chai');",
+							"var moment = require('moment');",
+							"var expect = chai.expect;",
+							"",
+							"pm.test(\"Response is 200 Ok\", function () {",
+							"    pm.expect(pm.response.status).to.equal(\"OK\");",
+							"    pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"pm.test(\"Response has schedule data\", function () {",
+							"    expect(jsonData.totalTime).to.be.a('number');",
+							"    expect(jsonData.schedule).to.be.an('array').that.has.lengthOf(4);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Schedule data is in chronological order\", function () {",
+							"    var previousTaskDate = moment();",
+							"    ",
+							"    var schedule = jsonData.schedule;",
+							"    ",
+							"    schedule.forEach((scheduledTask) => {",
+							"        const startsAt = moment.unix(scheduledTask.startsAt);",
+							"        const endsAt = moment.unix(scheduledTask.endsAt);",
+							"        ",
+							"        expect(previousTaskDate.isBefore(startsAt)).to.be.equal(true);",
+							"        expect(startsAt.isBefore(endsAt)).to.be.equal(true);",
+							"        ",
+							"        previousTaskDate = endsAt.clone();",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"departureTime\": \"{{departureTime}}\",\n  \"home\": {\n    \"lat\": 48.83310530000001,\n    \"lng\": 2.333563799999979\n  },\n  \"tasks\":[\n    {\n       \"id\":1,\n       \"lat\":48.8623348,\n       \"lng\":2.3447356000000354,\n       \"duration\":45\n    },\n    {\n      \"id\":2,\n      \"lat\":48.879251,\n      \"lng\":2.282264899999973,\n      \"duration\": 60\n    },\n    {\n      \"id\": 3,\n      \"lat\": 48.7251521,\n      \"lng\": 2.259899799999971,\n      \"duration\": 30\n    },\n    {\n      \"id\": 4,\n      \"lat\": 48.83477,\n      \"lng\": 2.370769999999993,\n      \"duration\": 90\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/routeOptimizer",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"routeOptimizer"
+					]
+				},
+				"description": "Best case scenario with all fields valid and departureTime in the future."
+			},
+			"response": [
+				{
+					"name": "Valid response example",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"departureTime\": \"{{departureTime}}\",\n  \"home\": {\n    \"lat\": 48.83310530000001,\n    \"lng\": 2.333563799999979\n  },\n  \"tasks\":[\n    {\n       \"id\":1,\n       \"lat\":48.8623348,\n       \"lng\":2.3447356000000354,\n       \"duration\":45\n    },\n    {\n      \"id\":2,\n      \"lat\":48.879251,\n      \"lng\":2.282264899999973,\n      \"duration\": 60\n    },\n    {\n      \"id\": 3,\n      \"lat\": 48.7251521,\n      \"lng\": 2.259899799999971,\n      \"duration\": 30\n    },\n    {\n      \"id\": 4,\n      \"lat\": 48.83477,\n      \"lng\": 2.370769999999993,\n      \"duration\": 90\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/routeOptimizer",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"routeOptimizer"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "608"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"260-jHxd4fuSfGrOX+Gbz+xM0foHdBY\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 03 Sep 2019 17:07:24 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"totalTime\": 333,\n    \"schedule\": [\n        {\n            \"id\": 3,\n            \"startsAt\": 1567618198,\n            \"endsAt\": 1567619998,\n            \"lat\": 48.7251521,\n            \"lng\": 2.259899799999971\n        },\n        {\n            \"id\": 2,\n            \"startsAt\": 1567621904,\n            \"endsAt\": 1567625504,\n            \"lat\": 48.879251,\n            \"lng\": 2.282264899999973\n        },\n        {\n            \"id\": 1,\n            \"startsAt\": 1567626946,\n            \"endsAt\": 1567629646,\n            \"lat\": 48.8623348,\n            \"lng\": 2.3447356000000354\n        },\n        {\n            \"id\": 4,\n            \"startsAt\": 1567630545,\n            \"endsAt\": 1567635945,\n            \"lat\": 48.83477,\n            \"lng\": 2.370769999999993\n        }\n    ]\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d3e8d7ff-f99f-4e35-9b2d-2731ac1806f9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "8a1be8e6-94e6-4028-a146-c9fd202a8ba9",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
